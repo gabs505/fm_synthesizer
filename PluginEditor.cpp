@@ -16,8 +16,7 @@ GeneratorWt1AudioProcessorEditor::GeneratorWt1AudioProcessorEditor (GeneratorWt1
     : AudioProcessorEditor (&p), processor (p),
 	keyboardComponent(processor.keyboardState, MidiKeyboardComponent::horizontalKeyboard)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+   
 	addAndMakeVisible(keyboardComponent);
 	setSize(600, 300);
 	startTimer(400);
@@ -62,8 +61,7 @@ GeneratorWt1AudioProcessorEditor::GeneratorWt1AudioProcessorEditor (GeneratorWt1
 	sustain.attachToComponent(&sustainSlider, true);
 	release.attachToComponent(&releaseSlider, true);
 
-	/*mod1Label.attachToComponent(&modulationIndex, false);
-	mod2Label.attachToComponent(&mod2Freq, false);*/
+	
 
 	addAndMakeVisible(&attackSlider);
 	addAndMakeVisible(&decaySlider);
@@ -120,12 +118,12 @@ GeneratorWt1AudioProcessorEditor::~GeneratorWt1AudioProcessorEditor()
 //==============================================================================
 void GeneratorWt1AudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
+    
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::white);
     g.setFont (40.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    
 }
 
 void GeneratorWt1AudioProcessorEditor::resized()

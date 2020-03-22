@@ -23,14 +23,14 @@ struct SineWaveSound : public SynthesiserSound
 //==============================================================================
 struct SineWaveVoice : public SynthesiserVoice
 {
-	// ***
+	
 	SineWaveVoice(const AudioSampleBuffer& wavetableToUse, unsigned int voices) : wavetable(wavetableToUse)
 	{
 		globalLevel = 0.5 / (float)voices;
 		jassert(wavetable.getNumChannels() == 1);
 	}
 
-	//***************wavetable synthesis of 2nd modulator
+	
 	void setFrequency(float frequency, float sampleRate)
 	{
 		auto tableSizeOverSampleRate = wavetable.getNumSamples() / sampleRate;
@@ -51,12 +51,12 @@ struct SineWaveVoice : public SynthesiserVoice
 			currentIndex -= tableSize;
 		return currentSample;
 	}
-	//****************************************************
+	
 
 
 
 
-	// ***
+	
 	bool canPlaySound(SynthesiserSound* sound) override
 	{
 		return dynamic_cast<SineWaveSound*> (sound) != nullptr;
@@ -64,10 +64,10 @@ struct SineWaveVoice : public SynthesiserVoice
 	void startNote(int midiNoteNumber, float velocity,
 		SynthesiserSound*, int /*currentPitchWheelPosition*/) override
 	{
-		//**
+		
 		currentIndex = 0.0;
 		setFrequency(mod2freq, getSampleRate());
-		//**
+		
 		currentAngle = 0.0;
 		currentModAngle = 0.0;
 
@@ -89,7 +89,7 @@ struct SineWaveVoice : public SynthesiserVoice
 	}
 	void stopNote(float /*velocity*/, bool allowTailOff) override
 	{
-		if (allowTailOff) //po komunikacie noteOff ustawiamy tailOff na 1.0, ¿eby uzyskaæ release
+		if (allowTailOff) 
 		{
 			if (tailOff == 0.0)
 				tailOff = 1.0;
@@ -105,9 +105,9 @@ struct SineWaveVoice : public SynthesiserVoice
 	void controllerMoved(int, int) override {}
 	void renderNextBlock(AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
 	{
-		if (angleDelta != 0.0) // ***
+		if (angleDelta != 0.0) 
 		{
-			if (tailOff > 0.0) //obs³uguje moment po zwolnieniu klawisza jeœli chcemy release
+			if (tailOff > 0.0) 
 			{
 				while (--numSamples >= 0)
 				{
@@ -123,7 +123,7 @@ struct SineWaveVoice : public SynthesiserVoice
 
 					for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
 						outputBuffer.addSample(i, startSample, currentSample);
-					currentAngle += angleDelta * (1 + currentModSample);//* (1 + mod2); //tu mno¿enie przez modulator
+					currentAngle += angleDelta * (1 + currentModSample);
 
 					currentModAngle += angleModDelta* (1 + mod2);
 
@@ -138,12 +138,12 @@ struct SineWaveVoice : public SynthesiserVoice
 					}
 				}
 			}
-			else //obs³uguje dŸwiêk w fazie przytrzymania klawisza
+			else 
 			{
 				while (--numSamples >= 0)
 				{
 					auto currentModSample = (float)(std::sin(currentModAngle) * levelMod);
-					//if switch on
+					
 					auto mod2 = getNextSample() * mod2level;
 					auto currentSample = (float)(std::sin(currentAngle) * level);
 
@@ -177,15 +177,15 @@ struct SineWaveVoice : public SynthesiserVoice
 
 
 
-	float attack = 0.2f, decay = 0.0f, sustain = 0.0f, release = 0.3f;//*****dodajemy parametry modyfikowane przez Gui
+	float attack = 0.2f, decay = 0.0f, sustain = 0.0f, release = 0.3f;
 	float levelMod = 1.0f, modRatio = 1.0;
 	float mod2level = 0.0f, mod2freq = 500.0f;
 private:
 	float tailOn = 0.0f;
 	float tailOffDecay = 0.0f;
-	float tailOff = 0.0; // ***
+	float tailOff = 0.0; 
 
-	//int currentFrequency=0;
+	
 
 	
 	double currentAngle = 0.0, angleDelta = 0.0;
@@ -237,7 +237,7 @@ public:
 	void prepareToPlay(int /*samplesPerBlockExpected*/, double sampleRate) override
 	{
 		synth.setCurrentPlaybackSampleRate(sampleRate);
-		createWavetable(); // ***
+		createWavetable();
 	}
 	void releaseResources() override {}
 	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
@@ -272,14 +272,11 @@ private:
 	{
 		signalTable.setSize(1, tableSize);
 		auto* samples = signalTable.getWritePointer(0);
-		//auto angleDelta = MathConstants<double>::twoPi / (double)(tableSize - 1);
-		//auto currentAngle = 0.0;
+		
 		auto currentValue = 1.0;
 		for (auto i = 0; i < tableSize; ++i)
 		{
-			/*auto sample = std::sin(currentAngle);
-			samples[i] = (float)sample;
-			currentAngle += angleDelta;*/
+		
 			auto sample = currentValue;
 			samples[i] = (float)sample;
 			currentValue -= float(1.0/tableSize);
@@ -288,5 +285,5 @@ private:
 	}
 
 
-	// ***
+	
 };
